@@ -7,7 +7,7 @@
 ## Why another library?
 
 * Very short & simple
-* Compatible with its PHP counterpart: "php-toggles"
+* Compatible with its PHP counterpart: [php-toggles](https://github.com/osinka/php-toggles)
 
 ## Features
 
