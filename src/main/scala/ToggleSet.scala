@@ -20,8 +20,8 @@ object ToggleSet {
   def tag(toggleSet: Set[String]) =
     TOGGLES_TAG -> serialize(toggleSet)
 
-  def cookie(toggleSet: Set[String]) =
-    Cookie(TOGGLES_COOKIE, serialize(toggleSet))
+  def cookie(toggleSet: Set[String], maxAge: Option[Int] = None) =
+    Cookie(TOGGLES_COOKIE, serialize(toggleSet), maxAge = maxAge)
 
   private def serialize(toggleSet: Set[String]): String = toggleSet.mkString("|")
 

@@ -4,7 +4,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
 import org.slf4j.LoggerFactory
 
-case class ToggleAction(toggles: Set[Toggle]) {
+case class ToggleAction(toggles: Set[Toggle], cookieTTL: Option[Int] = None) {
   private val logger = LoggerFactory.getLogger(getClass)
 
   def apply[A](action: Action[A]) = Action.async[A](action.parser) { request =>
@@ -22,7 +22,7 @@ case class ToggleAction(toggles: Set[Toggle]) {
       // Store in cookie for future use
       if (fromCookies.isEmpty) {
         logger.debug(s"Storing feature toggles ${activated.mkString(",")} into cookie on $request")
-        result.withCookies(ToggleSet.cookie(activated))
+        result.withCookies(ToggleSet.cookie(activated, cookieTTL))
       } else
         result
     }
