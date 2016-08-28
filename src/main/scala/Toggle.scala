@@ -29,8 +29,8 @@ case class Toggle(id: String, strategyFactories: Strategy.Factory*) {
       }
 
     if (inConfig contains false) false
-    else if (inCookies.isDefined) inCookies exists {_ contains id}
     else if (inConfig contains true) true
+    else if (inCookies.isDefined) inCookies exists {_ contains id}
     else if (byStrategy.headOption contains true) true
     else false
   }
