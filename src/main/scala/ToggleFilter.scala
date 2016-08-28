@@ -21,7 +21,7 @@ case class ToggleFilter(toggles: Set[Toggle], cookieTTL: Option[Int] = None) ext
 
     nextFilter(newRequestHeader) map { result =>
       // Store in cookie for future use
-      if (fromCookies.isEmpty) {
+      if (!fromCookies.contains(activated)) {
         logger.debug(s"Storing feature toggles ${activated.mkString(",")} into cookie on $requestHeader")
         result.withCookies(ToggleSet.cookie(activated, cookieTTL))
       } else

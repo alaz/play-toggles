@@ -20,7 +20,7 @@ case class ToggleAction(toggles: Set[Toggle], cookieTTL: Option[Int] = None) {
 
     action(newRequest) map { result =>
       // Store in cookie for future use
-      if (fromCookies.isEmpty) {
+      if (!fromCookies.contains(activated)) {
         logger.debug(s"Storing feature toggles ${activated.mkString(",")} into cookie on $request")
         result.withCookies(ToggleSet.cookie(activated, cookieTTL))
       } else
