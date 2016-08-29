@@ -46,6 +46,16 @@ object Toggles extends ToggleRegistry {
 }
 ```
 
+You would need to bind `ToggleRegistry` to `Toggles` implementation:
+
+```
+class Module extends AbstractModule {
+  def configure(): Unit = {
+    bind(classOf[ToggleRegistry]).to(Toggles)
+  }
+}
+```
+
 In `conf/application.conf`:
 
 ```
@@ -68,7 +78,7 @@ Strategies will be calculated only if `enabled` is not defined in the configurat
 In order to check the toggles, either a filter should be used:
 
 ```scala
-object Global extends WithFilters(ToggleFilter(Toggles))
+object Filter @Inject() (toggles: ToggleFilter) extends DefaultHttpFilters(toggles)
 ```
 
 or wrap specific actions into `ToggleAction(Toggles)`

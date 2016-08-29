@@ -1,12 +1,18 @@
 package com.osinka.play.toggles
 
+import javax.inject.Inject
 import scala.concurrent.Future
+import play.api.Configuration
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
+import akka.stream.Materializer
 import org.slf4j.LoggerFactory
 
-case class ToggleFilter(toggles: Set[Toggle], cookieTTL: Option[Int] = None) extends Filter {
+class ToggleFilter @Inject() (implicit val mat: Materializer, configuration: Configuration, filterToggles: ToggleRegistry) extends Filter {
   private val logger = LoggerFactory.getLogger(getClass)
+
+  val cookieTTL = configuration.getMilliseconds("toggles.cookieTTL") map { millis => (millis / 1000).toInt }
+  val toggles = filterToggles.toggles
 
   def apply(nextFilter: (RequestHeader) => Future[Result])(requestHeader: RequestHeader): Future[Result] = {
     // Eagerly calculate all registered toggles activation and store in tags
@@ -28,8 +34,4 @@ case class ToggleFilter(toggles: Set[Toggle], cookieTTL: Option[Int] = None) ext
         result
     }
   }
-}
-
-object ToggleFilter {
-  def apply(toggles: ToggleRegistry) = new ToggleFilter(toggles.toggles)
 }

@@ -15,7 +15,7 @@ description := """Feature Toggles for Play Framework"""
 scalaVersion in ThisBuild := "2.11.8"
 
 libraryDependencies in ThisBuild ++= Seq(
-  "com.typesafe.play" %% "play" % "2.3.10" % "provided"
+  "com.typesafe.play" %% "play" % "2.5.6" % "provided"
 )
 
 scalacOptions ++= List("-deprecation", "-unchecked", "-feature")
