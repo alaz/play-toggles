@@ -5,10 +5,9 @@ import scala.concurrent.Future
 import play.api.Configuration
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
-import akka.stream.Materializer
 import org.slf4j.LoggerFactory
 
-class ToggleFilter @Inject() (implicit val mat: Materializer, configuration: Configuration, filterToggles: ToggleRegistry) extends Filter {
+class ToggleFilter @Inject() (configuration: Configuration, filterToggles: ToggleRegistry) extends Filter {
   private val logger = LoggerFactory.getLogger(getClass)
 
   val cookieTTL = configuration.getMilliseconds("toggles.cookieTTL") map { millis => (millis / 1000).toInt }
@@ -19,7 +18,7 @@ class ToggleFilter @Inject() (implicit val mat: Materializer, configuration: Con
     logger.debug(s"cookies is ${requestHeader.cookies}")
     val fromCookies = ToggleSet.from(requestHeader.cookies)
     logger.debug(s"ToggleSet is $fromCookies")
-    logger.debug(s"Toggles is ${toggles}")
+    logger.debug(s"Toggles is $toggles")
     val activated = toggles filter {_.activated(requestHeader)} map {_.id}
     val newRequestHeader = requestHeader.copy(tags = requestHeader.tags + ToggleSet.tag(activated))
 
